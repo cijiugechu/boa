@@ -1,6 +1,7 @@
 use super::jump_control::{JumpRecord, JumpRecordAction, JumpRecordKind};
 use crate::bytecompiler::ByteCompiler;
 use boa_ast::Statement;
+use thin_vec::ThinVec;
 
 mod block;
 mod r#break;
@@ -114,8 +115,8 @@ impl ByteCompiler<'_> {
         .perform_actions(Self::DUMMY_ADDRESS, self);
     }
 
-    fn return_jump_record_actions(&self) -> Vec<JumpRecordAction> {
-        let mut actions = Vec::default();
+    fn return_jump_record_actions(&self) -> ThinVec<JumpRecordAction> {
+        let mut actions = ThinVec::default();
         for (i, info) in self.jump_info.iter().enumerate().rev() {
             let count = self.jump_info_open_environment_count(i);
             actions.push(JumpRecordAction::PopEnvironments { count });

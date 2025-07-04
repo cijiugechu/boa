@@ -3,6 +3,7 @@ use crate::bytecompiler::{
     jump_control::{JumpRecord, JumpRecordAction, JumpRecordKind},
 };
 use boa_ast::statement::Continue;
+use thin_vec::ThinVec;
 
 impl ByteCompiler<'_> {
     #[allow(clippy::unnecessary_wraps)]
@@ -13,8 +14,8 @@ impl ByteCompiler<'_> {
             .perform_actions(Self::DUMMY_ADDRESS, self);
     }
 
-    fn continue_jump_record_actions(&self, node: Continue) -> Vec<JumpRecordAction> {
-        let mut actions = Vec::default();
+    fn continue_jump_record_actions(&self, node: Continue) -> ThinVec<JumpRecordAction> {
+        let mut actions = ThinVec::default();
         for (i, info) in self.jump_info.iter().enumerate().rev() {
             let count = self.jump_info_open_environment_count(i);
             actions.push(JumpRecordAction::PopEnvironments { count });

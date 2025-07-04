@@ -3,6 +3,7 @@ use crate::bytecompiler::{
     jump_control::{JumpRecord, JumpRecordAction, JumpRecordKind},
 };
 use boa_ast::statement::Break;
+use thin_vec::ThinVec;
 
 impl ByteCompiler<'_> {
     /// Compile a [`Break`] `boa_ast` node
@@ -12,8 +13,8 @@ impl ByteCompiler<'_> {
         JumpRecord::new(JumpRecordKind::Break, actions).perform_actions(Self::DUMMY_ADDRESS, self);
     }
 
-    fn break_jump_record_actions(&self, node: Break) -> Vec<JumpRecordAction> {
-        let mut actions = Vec::default();
+    fn break_jump_record_actions(&self, node: Break) -> ThinVec<JumpRecordAction> {
+        let mut actions = ThinVec::default();
         for (i, info) in self.jump_info.iter().enumerate().rev() {
             let count = self.jump_info_open_environment_count(i);
             actions.push(JumpRecordAction::PopEnvironments { count });

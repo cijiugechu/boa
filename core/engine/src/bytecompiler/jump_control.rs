@@ -16,7 +16,7 @@ use crate::{
 };
 use bitflags::bitflags;
 use boa_interner::Sym;
-use thin_vec::thin_vec;
+use thin_vec::{ThinVec, thin_vec};
 
 /// An actions to be performed for the local control flow.
 #[derive(Debug, Clone, Copy)]
@@ -46,7 +46,7 @@ pub(crate) enum JumpRecordAction {
     ///         if (cond) {
     ///             continue;
     ///         }
-    ///         
+    ///
     ///         break;
     ///     } finally {
     ///         // Must execute the finally, even if `continue` is executed or `break` is executed.
@@ -78,11 +78,11 @@ pub(crate) enum JumpRecordKind {
 pub(crate) struct JumpRecord {
     kind: JumpRecordKind,
     label: Label,
-    actions: Vec<JumpRecordAction>,
+    actions: ThinVec<JumpRecordAction>,
 }
 
 impl JumpRecord {
-    pub(crate) const fn new(kind: JumpRecordKind, actions: Vec<JumpRecordAction>) -> Self {
+    pub(crate) fn new(kind: JumpRecordKind, actions: ThinVec<JumpRecordAction>) -> Self {
         Self {
             kind,
             label: ByteCompiler::DUMMY_LABEL,
